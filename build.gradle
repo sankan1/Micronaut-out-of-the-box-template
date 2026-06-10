@@ -19,6 +19,7 @@ dependencies {
 
     implementation "io.micronaut.serde:micronaut-serde-jackson"
     implementation "io.micronaut.sql:micronaut-jdbc-hikari"
+    implementation "jakarta.validation:jakarta.validation-api"
     implementation libs.postgres.driver
     implementation libs.jooq.core
 
