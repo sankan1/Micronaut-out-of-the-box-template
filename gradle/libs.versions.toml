@@ -1,0 +1,24 @@
+# https://repo.grails.org/
+[versions]
+java = "21"
+micronaut = "4.6.2"
+micronaut-openapi = "4.6.2"
+jooq = "3.21.4"
+postgres = "42.7.7"
+testcontainers = "1.20.1"
+liquibase = "4.29.2"
+jooq-plugin = "10.2.1"
+
+[libraries]
+postgres-driver = { module = "org.postgresql:postgresql", version.ref = "postgres" }
+jooq-core = { module = "org.jooq:jooq", version.ref = "jooq" }
+
+# Database subproject tools
+liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
+testcontainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+
+[plugins]
+micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut" }
+micronaut-minimal-application = { id = "io.micronaut.minimal.application", version.ref = "micronaut" }
+micronaut-openapi = { id = "io.micronaut.openapi", version.ref = "micronaut-openapi" }
+jooq-generator = { id = "nu.studer.jooq", version.ref = "jooq-plugin" }

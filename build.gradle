@@ -1,92 +1,89 @@
 plugins {
-    id("groovy") 
-    id("io.micronaut.application") version "5.0.0"
-    id("com.gradleup.shadow") version "9.4.1"
-    id("io.micronaut.aot") version "5.0.0"
+    id 'java'
+    alias(libs.plugins.micronaut.application)
+    alias(libs.plugins.jooq.generator)
 }
 
-version = "0.1"
-group = "com.example"
-
-
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    annotationProcessor("io.micronaut:micronaut-http-validation")
-    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    compileOnly("io.micronaut:micronaut-http-client")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    testImplementation("io.micronaut:micronaut-http-client")
-}
-
-
-
-application {
-    mainClass = "com.example.Application"
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("25")
-    targetCompatibility = JavaVersion.toVersion("25")
-}
-
-
-
-
-graalvmNative.toolchainDetection = false
-graalvmNative {
-    binaries {
-        all {
-            buildArgs.add("-H:+SharedArenaSupport")
+sourceSets {
+    main {
+        java {
+            srcDir("${generatedSources}/jooq/java")
+            srcDir("${generatedSources}/openapi/java")
         }
     }
 }
 
+dependencies {
+    annotationProcessor "io.micronaut:micronaut-http-validation"
+    annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
 
+    implementation "io.micronaut.serde:micronaut-serde-jackson"
+    implementation "io.micronaut.sql:micronaut-jdbc-hikari"
+    implementation libs.postgres.driver
+    implementation libs.jooq.core
 
+    // Wire subprojects
+    implementation project(':openapi')
+    jooqGenerator project(':database')
+
+    runtimeOnly "ch.qos.logback:logback-classic"
+}
+
+application {
+    mainClass = "${group}.Application"
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+    targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+}
 
 micronaut {
-    runtime("netty")
-    testRuntime("spock2")
+    runtime('netty')
     processing {
         incremental(true)
-        annotations("com.example.*")
+        annotations("${group}.*")
     }
-    aot {
-        // Please review carefully the optimizations enabled below
-        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
-        optimizeServiceLoading = false
-        convertYamlToJava = false
-        precomputeOperations = true
-        cacheEnvironment = true
-        optimizeClassLoading = true
-        deduceEnvironment = true
-        optimizeNetty = true
-        replaceLogbackXml = true
+}
+
+jooq {
+    version = jooqVersion
+
+    configurations {
+        main {
+            generateSchemaSourceOnCompilation = false
+
+            generationTool {
+                jdbc {
+                    driver = 'org.testcontainers.jdbc.ContainerDatabaseDriver'
+                    url = "jdbc:tc:postgresql:17:///jooq-db?TC_INITSCRIPT=file:${generatedSources}/resources/pg_dump.sql"
+                }
+
+                generator {
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
+                    }
+                    generate {
+                        daos = true
+                        pojos = true
+                    }
+                    target {
+                        directory = "${generatedSources}/jooq/java"
+                        packageName = "${group}.jooq"
+                    }
+                }
+            }
+        }
     }
-
 }
 
-tasks.named("dockerfile") {
-
-    baseImage = "eclipse-temurin:25-jre"
+cleanGenerateJooq {
+    delete "${generatedSources}/jooq"
 }
 
-
-
-
-
-
-
-// https://docs.gradle.org/current/userguide/upgrading_major_version_9.html#test_task_fails_when_no_tests_are_discovered
-tasks.withType(AbstractTestTask).configureEach {
-    failOnNoDiscoveredTests = false
+generateJooq {
+    dependsOn ':database:dump', 'cleanGenerateJooq'
 }
 
-
-
-
+compileJava.dependsOn ':openapi:generateServerOpenApiModels'

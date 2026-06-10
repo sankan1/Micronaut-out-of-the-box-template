@@ -1,8 +1,23 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        maven {
+            url "https://repo.grails.org/grails/core"
+        }
+    }
+}
 
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://repo.grails.org/grails/core"
+        }
+    }
+}
 
-
-
-
-
-rootProject.name="demo"
-
+rootProject.name="micronaut-out-of-the-box-template"
+include 'database'
+include 'openapi'

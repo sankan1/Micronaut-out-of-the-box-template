@@ -1,0 +1,44 @@
+openapi: 3.0.3
+info:
+  title: Example API
+  version: 1.0.0
+paths:
+  /person/{id}:
+    get:
+      description: Get person by id
+      operationId: getPersonById
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: Identificator of the name
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Returns a person's model by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonModel'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+
+components:
+  schemas:
+    PersonModel:
+      description: Model containing persons info
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    DefaultErrorResponse:
+      description: Default error
+      properties:
+        errorMessage:
+          type: string
