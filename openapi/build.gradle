@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    alias(libs.plugins.micronaut.openapi)
+}
+
+micronaut {
+    openapi {
+        server(file('src/main/resources/swagger/openapi.yml')) {
+            alwaysUseGenerateHttpResponse = true
+            apiPackageName = "${group}.openapi.api"
+            invokerPackageName = "${group}.openapi.invoker"
+            modelPackageName = "${group}.openapi.model"
+            useReactive = false
+        }
+    }
+}
+
+// Map the generated output to the root project's src/generated
+generateServerOpenApiModels {
+    outputs.upToDateWhen { false }
+    outputKinds = ['apis', 'models']
+
+    doFirst {
+        delete "${rootDir}/${generatedSources}/openapi"
+    }
+
+    doLast {
+        copy {
+            from layout.buildDirectory.dir('generated/openapi/generateServerOpenApiModels/src/main/java')
+            into "${rootDir}/${generatedSources}/openapi/java"
+        }
+    }
+}

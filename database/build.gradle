@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    runtimeOnly libs.liquibase.core
+    runtimeOnly libs.postgres.driver
+    runtimeOnly libs.testcontainers.postgres
+}
+
+//application {
+  //  mainClass = 'liquibase.integration.commandline.LiquibaseCommandLine'
+//}
+
+
+// Dump task using TestContainers
+tasks.register('dump', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'liquibase.integration.commandline.LiquibaseCommandLine'
+
+    // We output the dump file to the root project's generatedSources directory
+    args += '--driver=org.testcontainers.jdbc.ContainerDatabaseDriver'
+    args += "--url=jdbc:tc:postgresql:17:///"
+    args += "--output-file=../${generatedSources}/resources/pg_dump.sql"
+    args += 'update-sql'
+}
