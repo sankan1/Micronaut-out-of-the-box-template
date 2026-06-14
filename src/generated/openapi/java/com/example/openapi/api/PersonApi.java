@@ -42,4 +42,13 @@ public interface PersonApi {
         @QueryValue("id") @NotNull Integer id
     );
 
+    /**
+     * Get all persons
+     *
+     * @return Returns all persons (status code 200)
+     *         or Default error response (status code default)
+     */
+    @Get("/person")
+    HttpResponse<@NotNull List<@Valid PersonModel>> getPersons();
+
 }

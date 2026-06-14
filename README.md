@@ -1,24 +1,63 @@
-## Micronaut 5.0.2 Documentation
+## Micronaut Template Doc
+This is a base micronaut backend project implementation with the following features
+- Jooq database class generation
+- Openapi spec generator
+- Logging
+- Unleash feature flags for develop/local development
 
-- [User Guide](https://docs.micronaut.io/5.0.2/guide/index.html)
-- [API Reference](https://docs.micronaut.io/5.0.2/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/5.0.2/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+## Development notes and getting started
 
-- [Micronaut Gradle Plugin documentation](https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/)
-- [GraalVM Gradle Plugin documentation](https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html)
-- [Shadow Gradle Plugin](https://gradleup.com/shadow/)
-## Feature micronaut-aot documentation
+### Jooq generation
+Jooq is configured to first generate the /structure/ changesets and then /data/ changesets. Both ``.sql`` and ``.yml`` are supported.
 
+1. Initialise db containers
 
-- [Micronaut AOT documentation](https://micronaut-projects.github.io/micronaut-aot/latest/guide/)
+``
+docker compose up -d
+``
 
+2. Apply changesets
 
-## Feature serialization-jackson documentation
+``
+./gradlew :database:update
+``
 
+3. Generate jooq
 
-- [Micronaut Serialization Jackson Core documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
+``
+./gradlew generateJooq
+``
 
-## Development notes
+4. Apply generated changesets (after every jooq generation)
 
+``
+./gradlew :database:update
+``
+
+### Openapi API's generation
+Example made in
+- ``openapi/src/main/resources/swagger/openapi.yml``
+- ``src/main/java/com/example/business``
+
+1. Generate openapi APIs
+
+``
+./gradlew :openapi:generateServerOpenApiApis
+``
+
+2. Generate openapi models/schemas
+
+``
+./gradlew :openapi:generateServerOpenApiModels
+``
+
+### Unleash
+- Port: localhost:4242
+- User: unleash
+- Password: unleash
+
+Example flag referenced in ``src/main/java/com/example/business/useCase/GetPersons.java``
+
+<img src="unleash_ftr_flag.png" alt="unleash feature flag view">
+
+<img src="ftr_flag_output_in_logs.png" alt="feature flag output logs">

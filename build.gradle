@@ -29,9 +29,13 @@ dependencies {
     implementation('io.micronaut.sql:micronaut-jooq') {
         exclude group: 'org.jooq', module: 'jooq'
     }
+    implementation 'net.logstash.logback:logstash-logback-encoder:9.0'
+    implementation 'io.getunleash:unleash-client-java:12.2.2'
     implementation "org.jooq:jooq:${jooqVersion}"
+
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'ch.qos.logback:logback-classic'
+    runtimeOnly 'org.yaml:snakeyaml:2.2'
 
     jooqGenerator project(':database')
     jooqGenerator 'org.postgresql:postgresql'

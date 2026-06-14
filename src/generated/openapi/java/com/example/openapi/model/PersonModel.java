@@ -42,7 +42,7 @@ public class PersonModel {
     @Nullable(inherited = true)
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     @Nullable(inherited = true)
     @JsonProperty(JSON_PROPERTY_NAME)
@@ -57,7 +57,7 @@ public class PersonModel {
     /**
      * @return the id property value
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -66,7 +66,7 @@ public class PersonModel {
      *
      * @param id property value to set
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -75,7 +75,7 @@ public class PersonModel {
      *
      * @return The same instance of PersonModel for chaining.
      */
-    public PersonModel id(Integer id) {
+    public PersonModel id(Long id) {
         this.id = id;
         return this;
     }

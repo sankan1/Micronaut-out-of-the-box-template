@@ -35,4 +35,9 @@ tasks.register('dump', JavaExec) {
     args += "--output-file=../${generatedSources}/${pgDump}"
     args += 'update-sql'
     args += '--contexts=jooq'
+
+    doLast {
+        def f = file("../${generatedSources}/${pgDump}")
+        f.text = f.text.replaceAll(/(?m)^.*(192\.168\.|10\.\d|172\.(1[6-9]|2\d|3[01])\.|jdbc:).*$/, '-- [redacted]')
+    }
 }

@@ -8,3 +8,26 @@ services:
       POSTGRES_INITDB_ARGS: "--encoding=UTF8"
     ports:
       - "${PG_PORT}:5432"
+
+  unleash-db:
+    image: postgres:${UNLEASH_DB_VERSION}
+    environment:
+      POSTGRES_DB: ${UNLEASH_DATABASE}
+      POSTGRES_USER: ${UNLEASH_USERNAME}
+      POSTGRES_PASSWORD: ${UNLEASH_PASSWORD}
+    ports:
+      - "${UNLEASH_PORT}:5432"
+
+  unleash:
+    image: unleashorg/unleash-server:7
+    ports:
+      - "4242:4242"
+    environment:
+      DATABASE_URL: "postgres://${UNLEASH_USERNAME}:${UNLEASH_PASSWORD}@unleash-db:5432/${UNLEASH_DATABASE}"
+      DATABASE_SSL: "false"
+      INIT_ADMIN_API_TOKENS: "*:*.admin-token-123"
+      INIT_CLIENT_API_TOKENS: "*:development.client-token-123"
+      UNLEASH_DEFAULT_ADMIN_USERNAME: ${UNLEASH_DEFAULT_ADMIN_USERNAME}
+      UNLEASH_DEFAULT_ADMIN_PASSWORD: ${UNLEASH_DEFAULT_ADMIN_PASSWORD}
+    depends_on:
+      - unleash-db
