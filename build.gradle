@@ -2,7 +2,11 @@ plugins {
     id 'java'
     alias(libs.plugins.micronaut.application)
     alias(libs.plugins.jooq.generator)
+    id 'co.uzzu.dotenv.gradle' version '4.0.0'
 }
+
+version = project.properties['version']
+group = project.properties['group']
 
 sourceSets {
     main {
@@ -14,20 +18,23 @@ sourceSets {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-http-validation"
-    annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
+    annotationProcessor 'io.micronaut.serde:micronaut-serde-processor'
+    annotationProcessor 'io.micronaut.validation:micronaut-validation-processor'
 
-    implementation "io.micronaut.serde:micronaut-serde-jackson"
-    implementation "io.micronaut.sql:micronaut-jdbc-hikari"
-    implementation "jakarta.validation:jakarta.validation-api"
-    implementation libs.postgres.driver
-    implementation libs.jooq.core
-
-    // Wire subprojects
     implementation project(':openapi')
-    jooqGenerator project(':database')
 
-    runtimeOnly "ch.qos.logback:logback-classic"
+    implementation 'io.micronaut.serde:micronaut-serde-jackson'
+    implementation 'io.micronaut.validation:micronaut-validation'
+    implementation 'io.micronaut.sql:micronaut-jdbc-hikari'
+    implementation('io.micronaut.sql:micronaut-jooq') {
+        exclude group: 'org.jooq', module: 'jooq'
+    }
+    implementation "org.jooq:jooq:${jooqVersion}"
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'ch.qos.logback:logback-classic'
+
+    jooqGenerator project(':database')
+    jooqGenerator 'org.postgresql:postgresql'
 }
 
 application {
@@ -35,8 +42,8 @@ application {
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
-    targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+    sourceCompatibility = JavaVersion.toVersion(javaVersion)
+    targetCompatibility = JavaVersion.toVersion(javaVersion)
 }
 
 micronaut {
@@ -57,17 +64,21 @@ jooq {
             generationTool {
                 jdbc {
                     driver = 'org.testcontainers.jdbc.ContainerDatabaseDriver'
-                    url = "jdbc:tc:postgresql:17:///jooq-db?TC_INITSCRIPT=file:${generatedSources}/resources/pg_dump.sql"
+                    url = "jdbc:tc:postgresql:${pgVersion}:///jooq-db?TC_INITSCRIPT=file:${project.rootDir}/${generatedSources}/${pgDump}"
                 }
 
                 generator {
                     database {
                         name = 'org.jooq.meta.postgres.PostgresDatabase'
-                        inputSchema = 'public'
+                        excludes = 'databasechangelog|databasechangeloglock'
+                        schemata {
+                            schema { inputSchema = 'public' }
+                        }
                     }
                     generate {
                         daos = true
                         pojos = true
+                        fluentSetters = true
                     }
                     target {
                         directory = "${generatedSources}/jooq/java"
@@ -79,8 +90,10 @@ jooq {
     }
 }
 
-cleanGenerateJooq {
-    delete "${generatedSources}/jooq"
+tasks.register('cleanGenerateJooq') {
+    doLast {
+        delete "${generatedSources}/jooq"
+    }
 }
 
 generateJooq {

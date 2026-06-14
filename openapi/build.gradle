@@ -1,6 +1,12 @@
 plugins {
     id 'java'
-    alias(libs.plugins.micronaut.openapi)
+    id 'io.micronaut.minimal.application'
+    id 'io.micronaut.openapi' version "${micronautGradleVersion}"
+}
+
+dependencies {
+    compileOnly 'io.micronaut.serde:micronaut-serde-jackson'
+    compileOnly 'io.micronaut.validation:micronaut-validation'
 }
 
 micronaut {
@@ -29,5 +35,6 @@ generateServerOpenApiModels {
             from layout.buildDirectory.dir('generated/openapi/generateServerOpenApiModels/src/main/java')
             into "${rootDir}/${generatedSources}/openapi/java"
         }
+        delete layout.buildDirectory.dir('generated')
     }
 }

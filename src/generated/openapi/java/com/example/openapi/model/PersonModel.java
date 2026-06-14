@@ -29,6 +29,7 @@ import jakarta.annotation.Generated;
 @JsonPropertyOrder({
     PersonModel.JSON_PROPERTY_ID,
     PersonModel.JSON_PROPERTY_NAME,
+    PersonModel.JSON_PROPERTY_NICKNAME,
 })
 @Serdeable
 @Generated("io.micronaut.openapi.generator.JavaMicronautServerCodegen")
@@ -36,6 +37,7 @@ public class PersonModel {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_NAME = "name";
+    public static final String JSON_PROPERTY_NICKNAME = "nickname";
 
     @Nullable(inherited = true)
     @JsonProperty(JSON_PROPERTY_ID)
@@ -46,6 +48,11 @@ public class PersonModel {
     @JsonProperty(JSON_PROPERTY_NAME)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String name;
+
+    @Nullable(inherited = true)
+    @JsonProperty(JSON_PROPERTY_NICKNAME)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String nickname;
 
     /**
      * @return the id property value
@@ -99,6 +106,32 @@ public class PersonModel {
         return this;
     }
 
+    /**
+     * @return the nickname property value
+     */
+    public String getNickname() {
+        return nickname;
+    }
+
+    /**
+     * Set the nickname property value
+     *
+     * @param nickname property value to set
+     */
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * Set nickname in a chainable fashion.
+     *
+     * @return The same instance of PersonModel for chaining.
+     */
+    public PersonModel nickname(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -109,19 +142,21 @@ public class PersonModel {
         }
         var personModel = (PersonModel) o;
         return Objects.equals(this.id, personModel.id)
-            && Objects.equals(this.name, personModel.name);
+            && Objects.equals(this.name, personModel.name)
+            && Objects.equals(this.nickname, personModel.nickname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, nickname);
     }
 
     @Override
     public String toString() {
         return "PersonModel("
             + "id: " + getId() + ", "
-            + "name: " + getName()
+            + "name: " + getName() + ", "
+            + "nickname: " + getNickname()
             + ")";
     }
 

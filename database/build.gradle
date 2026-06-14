@@ -4,23 +4,35 @@ plugins {
 
 dependencies {
     runtimeOnly libs.liquibase.core
+    runtimeOnly 'info.picocli:picocli:4.7.5'
+    runtimeOnly 'org.yaml:snakeyaml:2.2'
     runtimeOnly libs.postgres.driver
     runtimeOnly libs.testcontainers.postgres
+    runtimeOnly 'ch.qos.logback:logback-classic:1.5.6'
+
+    runtimeOnly 'com.github.docker-java:docker-java-core:3.5.0'
+    runtimeOnly 'com.github.docker-java:docker-java-transport-zerodep:3.5.0'
 }
 
-//application {
-  //  mainClass = 'liquibase.integration.commandline.LiquibaseCommandLine'
-//}
+tasks.register('update', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'liquibase.integration.commandline.LiquibaseCommandLine'
 
+    args += "--url=jdbc:postgresql://${env.PG_HOST.value}:${env.PG_PORT.value}/${env.PG_DATABASE.value}?prepareThreshold=0"
+    args += "--username=${env.PG_USERNAME.value}"
+    args += "--password=${env.PG_PASSWORD.value}"
+    args += "--changeLogFile=changelog/db.changelog-master.yaml"
+    args += 'update'
+}
 
-// Dump task using TestContainers
 tasks.register('dump', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'liquibase.integration.commandline.LiquibaseCommandLine'
 
-    // We output the dump file to the root project's generatedSources directory
     args += '--driver=org.testcontainers.jdbc.ContainerDatabaseDriver'
-    args += "--url=jdbc:tc:postgresql:17:///"
-    args += "--output-file=../${generatedSources}/resources/pg_dump.sql"
+    args += "--url=jdbc:tc:postgresql:${pgVersion}:///"
+    args += "--changeLogFile=changelog/db.changelog-master.yaml"
+    args += "--output-file=../${generatedSources}/${pgDump}"
     args += 'update-sql'
+    args += '--contexts=jooq'
 }
