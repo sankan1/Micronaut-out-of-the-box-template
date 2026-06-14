@@ -73,6 +73,7 @@ jooq {
                         excludes = 'databasechangelog|databasechangeloglock'
                         schemata {
                             schema { inputSchema = 'public' }
+                            schema { inputSchema = 'person' }
                         }
                     }
                     generate {
