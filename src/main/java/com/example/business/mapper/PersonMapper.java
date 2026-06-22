@@ -1,22 +1,23 @@
 package com.example.business.mapper;
 
 import com.example.jooq.person.tables.pojos.Person;
-import com.example.openapi.model.PersonModel;
 
 import java.util.List;
 
 public final class PersonMapper {
 
-    public static List<PersonModel> mapToPersonModels(List<Person> persons) {
+    public static List<com.example.openapi.model.Person> mapToPersons(List<Person> persons) {
         return persons.stream()
-                .map(PersonMapper::mapToPersonModel)
+                .map(PersonMapper::mapToPerson)
                 .toList();
     }
 
-    private static PersonModel mapToPersonModel(Person person) {
-        return new PersonModel()
-                .id(person.getId())
-                .name(person.getName())
-                .nickname(person.getNickname());
+    private static com.example.openapi.model.Person mapToPerson(Person person) {
+        return new com.example.openapi.model.Person(
+                Math.toIntExact(person.getId()),
+                person.getName()
+        )
+                .nickname(person.getNickname())
+                .hobby(null);
     }
 }
