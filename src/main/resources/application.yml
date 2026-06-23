@@ -1,7 +1,77 @@
-#Tue Jun 09 11:21:43 EEST 2026
+domain: ${APP_DOMAIN:http://localhost:9000}
+
 micronaut:
   application:
     name: demo
+  server:
+    host: localhost
+    context-path: /api
+    cors:
+      enabled: true
+      configurations:
+        web:
+          allowed-origins:
+            - ${APP_DOMAIN:http://localhost:9000}
+          allowed-methods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+          allowed-headers:
+            - Content-Type
+            - Authorization
+          allow-credentials: true
+  http:
+    services:
+      oidc:
+        url: ${OIDC_ISSUER_URL:`https://login.example.ee`}
+        read-timeout: 5s
+  security:
+    authentication: cookie
+    intercept-url-map:
+      - pattern: /oauth/**
+        access:
+          - isAnonymous()
+      - pattern: /smart-id/**
+        access:
+          - isAnonymous()
+      - pattern: /logout
+        access:
+          - isAnonymous()
+    oauth2:
+      enabled: ${OIDC_ENABLED:false}
+      pkce:
+        enabled: true
+        persistence: cookie
+      callback-uri: "${micronaut.server.context-path}/oauth/callback{/provider}"
+      login-uri: "${micronaut.server.context-path}/oauth/login{/provider}"
+      default-provider: oidc
+      clients:
+        oidc:
+          client-id: ${OIDC_CLIENT_ID:example-client}
+          client-secret: ${OIDC_CLIENT_SECRET:example-secret}
+          grant-type: authorization_code
+          openid:
+            issuer: ${OIDC_ISSUER_URL:`https://login.example.ee`}
+          scopes:
+            - openid
+            - profile
+            - email
+    redirect:
+      login-success: "${domain}/login"
+      logout: "${domain}/"
+    token:
+      cookie:
+        enabled: true
+        cookie-name: authToken
+        cookie-same-site: Strict
+        cookie-secure: ${COOKIE_SECURE:false}
+        cookie-http-only: true
+        cookie-max-age: ${SESSION_COOKIE_MAX_AGE:1d}
+  caches:
+    smart-id-sessions:
+      expire-after-write: 5m
 
 datasources:
   default:
@@ -9,11 +79,34 @@ datasources:
     username: ${PG_USERNAME:postgres}
     password: ${PG_PASSWORD:postgres}
     driverClassName: org.postgresql.Driver
+
 jooq:
   datasources:
     default:
       sql-dialect: POSTGRES
+
 unleash:
   api-url: "${UNLEASH_API_URL:`http://localhost:4242/api/`}"
   api-token: "${UNLEASH_API_TOKEN:`*:development.client-token-123`}"
   app-name: "${UNLEASH_APP_NAME:micronaut-out-of-the-box-template}"
+
+app:
+  session:
+    absolute-lifetime: ${SESSION_ABSOLUTE_LIFETIME:12h}
+  roles:
+    admin-roles:
+      - example.admin
+    head-user-roles:
+      - example.head-user
+    end-user-roles:
+      - example.end-user
+      - end-user
+
+smart-id:
+  enabled: ${SMART_ID_ENABLED:true}
+  relying-party-uuid: ${SMART_ID_RP_UUID:00000000-0000-4000-8000-000000000000}
+  relying-party-name: ${SMART_ID_RP_NAME:DEMO}
+  host-url: ${SMART_ID_HOST_URL:https://sid.demo.sk.ee/smart-id-rp/v3/}
+  scheme-name: ${SMART_ID_SCHEME_NAME:smart-id-demo}
+  truststore-path: ${SMART_ID_TRUSTSTORE:classpath:smartid/demo_server_trusted_ssl_certs.jks}
+  truststore-password: ${SMART_ID_TRUSTSTORE_PASSWORD:changeit}

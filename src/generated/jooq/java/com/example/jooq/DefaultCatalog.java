@@ -5,6 +5,7 @@ package com.example.jooq;
 
 
 import com.example.jooq.person.Person;
+import com.example.jooq.system.System;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,11 @@ public class DefaultCatalog extends CatalogImpl {
     public final Person PERSON = Person.PERSON;
 
     /**
+     * The schema <code>system</code>.
+     */
+    public final System SYSTEM = System.SYSTEM;
+
+    /**
      * No further instances allowed
      */
     private DefaultCatalog() {
@@ -42,7 +48,8 @@ public class DefaultCatalog extends CatalogImpl {
     @Override
     public final List<Schema> getSchemas() {
         return Arrays.asList(
-            Person.PERSON
+            Person.PERSON,
+            System.SYSTEM
         );
     }
 

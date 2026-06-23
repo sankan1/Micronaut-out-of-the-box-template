@@ -82,6 +82,29 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/PersonsResponse' }
+  /smart-id/init:
+    post:
+      tags: [auth]
+      operationId: smartIdInit
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SmartIdInitRequest' }
+      responses:
+        '200':
+          description: Smart id init response
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SmartIdInitResponse' }
+  /smart-id/complete:
+    post:
+      tags: [auth]
+      operationId: smartIdComplete
+      parameters:
+        - { name: reference, in: query, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: Smart id complete response
 components:
   schemas:
     DefaultErrorResponse:
@@ -127,3 +150,13 @@ components:
         content: { type: array, items: { $ref: '#/components/schemas/Person' } }
         totalSize: { type: integer }
         totalPages: { type: integer }
+    SmartIdInitRequest:
+      type: object
+      required: [identityCode]
+      properties:
+        identityCode: { type: string, pattern: '^\d{11}$' }
+    SmartIdInitResponse:
+      type: object
+      properties:
+        reference: { type: string }
+        verificationCode: { type: string }
