@@ -8,6 +8,8 @@ services:
       POSTGRES_INITDB_ARGS: "--encoding=UTF8"
     ports:
       - "${PG_PORT}:5432"
+    volumes:
+      - local-db-data:/var/lib/postgresql/data
 
   unleash-db:
     image: postgres:${UNLEASH_DB_VERSION}
@@ -17,6 +19,8 @@ services:
       POSTGRES_PASSWORD: ${UNLEASH_PASSWORD}
     ports:
       - "${UNLEASH_PORT}:5432"
+    volumes:
+      - unleash-db-data:/var/lib/postgresql/data
 
   unleash:
     image: unleashorg/unleash-server:7
@@ -27,7 +31,54 @@ services:
       DATABASE_SSL: "false"
       INIT_ADMIN_API_TOKENS: "*:*.admin-token-123"
       INIT_CLIENT_API_TOKENS: "*:development.client-token-123"
+      INIT_FRONTEND_API_TOKENS: "*:development.unleash-insecure-frontend-api-token"
       UNLEASH_DEFAULT_ADMIN_USERNAME: ${UNLEASH_DEFAULT_ADMIN_USERNAME}
       UNLEASH_DEFAULT_ADMIN_PASSWORD: ${UNLEASH_DEFAULT_ADMIN_PASSWORD}
     depends_on:
       - unleash-db
+
+  keycloak-db:
+    image: postgres:${KC_DB_VERSION}
+    environment:
+      POSTGRES_DB: ${KC_DATABASE}
+      POSTGRES_USER: ${KC_USERNAME}
+      POSTGRES_PASSWORD: ${KC_PASSWORD}
+    ports:
+      - "${KC_DB_PORT}:5432"
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KC_VERSION}
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${KC_DATABASE}
+      KC_DB_USERNAME: ${KC_USERNAME}
+      KC_DB_PASSWORD: ${KC_PASSWORD}
+      KEYCLOAK_ADMIN: ${KC_ADMIN_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
+      KC_HOSTNAME: ${KC_HOSTNAME}
+      KC_HOSTNAME_PORT: ${KC_PORT}
+      KC_HOSTNAME_PROTOCOL: ${KC_PROTOCOL}
+      KC_PROXY: ${KC_PROXY}
+    ports:
+      - "${KC_PORT}:8080"
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    # --import-realm makes Keycloak load every realm file mounted below on every startup (skips realms that already exist)
+    command:
+      - "start-dev"
+      - "--import-realm"
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+
+volumes:
+  local-db-data:
+  unleash-db-data:
+  keycloak-db-data:

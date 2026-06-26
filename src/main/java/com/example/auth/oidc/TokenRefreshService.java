@@ -76,7 +76,7 @@ public class TokenRefreshService {
             return keepIfStillValid(auth, transportError);
         }
 
-        if (response.accessToken() == null || response.expiresIn() == null) {
+        if (response == null || response.accessToken() == null || response.expiresIn() == null) {
             return keepIfStillValid(auth,
                 new IllegalStateException("token response missing access_token/expires_in"));
         }

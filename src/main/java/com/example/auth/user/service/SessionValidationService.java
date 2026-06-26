@@ -5,6 +5,7 @@ import com.example.auth.user.dto.AuthenticatedUser;
 import com.example.auth.user.persistence.adapter.UserAdapter;
 import com.example.auth.user.persistence.port.UserAuthenticationPort;
 import com.example.auth.util.SessionUtil;
+import jakarta.transaction.Transactional;
 import jakarta.inject.Singleton;
 
 import java.time.OffsetDateTime;
@@ -31,6 +32,7 @@ public class SessionValidationService {
         this.sessionPolicy = sessionPolicy;
     }
 
+    @Transactional
     public AuthenticatedUser validate(String sessionId) {
         Optional<UUID> parsed = SessionUtil.parseSessionId(sessionId);
         if (parsed.isEmpty()) {

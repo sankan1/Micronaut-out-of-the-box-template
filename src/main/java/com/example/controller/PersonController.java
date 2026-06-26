@@ -18,7 +18,7 @@ public class PersonController implements PersonsApi {
 
     private final GetPersons getPersons;
 
-    private PersonController(
+    public PersonController(
             GetPersons getPersons
     ) {
         this.getPersons = getPersons;

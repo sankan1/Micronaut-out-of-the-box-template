@@ -1,0 +1,151 @@
+{
+    "realm": "micronaut",
+    "enabled": true,
+    "displayName": "Micronaut Realm",
+    "accessTokenLifespan": 300,
+    "ssoSessionIdleTimeout": 1800,
+    "sslRequired": "none",
+    "users": [
+        {
+            "username": "testuser",
+            "email": "testuser@example.com",
+            "firstName": "Test",
+            "lastName": "User",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password123",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "user"
+            ],
+            "clientRoles": {
+                "micronaut-app": [
+                    "user"
+                ]
+            }
+        },
+        {
+            "username": "adminuser",
+            "email": "admin@example.com",
+            "firstName": "Admin",
+            "lastName": "User",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password123",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "user",
+                "admin"
+            ],
+            "clientRoles": {
+                "micronaut-app": [
+                    "user",
+                    "admin"
+                ]
+            }
+        }
+    ],
+    "roles": {
+        "realm": [
+            {
+                "name": "user",
+                "description": "User role"
+            },
+            {
+                "name": "admin",
+                "description": "Admin role"
+            }
+        ]
+    },
+    "clients": [
+        {
+            "clientId": "micronaut-app",
+            "name": "Micronaut App",
+            "enabled": true,
+            "publicClient": false,
+            "secret": "micronaut-secret",
+            "standardFlowEnabled": true,
+            "directAccessGrantsEnabled": false,
+            "implicitFlowEnabled": false,
+            "serviceAccountsEnabled": false,
+            "redirectUris": [
+                "http://localhost:8080/oauth/callback/oidc",
+                "http://localhost:9000/oauth/callback/oidc",
+                "http://localhost:3000/oauth/callback/oidc"
+            ],
+            "webOrigins": [
+                "http://localhost:8080",
+                "http://localhost:9000",
+                "http://localhost:3000"
+            ],
+            "attributes": {
+                "post.logout.redirect.uris": "http://localhost:8080/##http://localhost:9000/##http://localhost:3000/"
+            },
+            "protocolMappers": [
+                {
+                    "name": "email",
+                    "protocol": "openid-connect",
+                    "protocolMapper": "oidc-usermodel-property-mapper",
+                    "consentRequired": false,
+                    "config": {
+                        "userinfo.token.claim": "true",
+                        "user.attribute": "email",
+                        "id.token.claim": "true",
+                        "access.token.claim": "true",
+                        "claim.name": "email"
+                    }
+                },
+                {
+                    "name": "given name",
+                    "protocol": "openid-connect",
+                    "protocolMapper": "oidc-usermodel-property-mapper",
+                    "consentRequired": false,
+                    "config": {
+                        "userinfo.token.claim": "true",
+                        "user.attribute": "firstName",
+                        "id.token.claim": "true",
+                        "access.token.claim": "true",
+                        "claim.name": "given_name"
+                    }
+                },
+                {
+                    "name": "family name",
+                    "protocol": "openid-connect",
+                    "protocolMapper": "oidc-usermodel-property-mapper",
+                    "consentRequired": false,
+                    "config": {
+                        "userinfo.token.claim": "true",
+                        "user.attribute": "lastName",
+                        "id.token.claim": "true",
+                        "access.token.claim": "true",
+                        "claim.name": "family_name"
+                    }
+                },
+                {
+                    "name": "roles",
+                    "protocol": "openid-connect",
+                    "protocolMapper": "oidc-usermodel-client-role-mapper",
+                    "consentRequired": false,
+                    "config": {
+                        "userinfo.token.claim": "true",
+                        "multivalued": "true",
+                        "user.attribute": "foo",
+                        "id.token.claim": "true",
+                        "access.token.claim": "true",
+                        "claim.name": "roles"
+                    }
+                }
+            ]
+        }
+    ]
+}

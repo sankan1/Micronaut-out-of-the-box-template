@@ -8,6 +8,10 @@ plugins {
 version = project.properties['version']
 group = project.properties['group']
 
+tasks.withType(JavaExec).configureEach {
+    environment(env.allVariables())
+}
+
 sourceSets {
     main {
         java {

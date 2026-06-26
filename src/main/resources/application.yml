@@ -5,7 +5,6 @@ micronaut:
     name: demo
   server:
     host: localhost
-    context-path: /api
     cors:
       enabled: true
       configurations:
@@ -39,21 +38,27 @@ micronaut:
       - pattern: /logout
         access:
           - isAnonymous()
+      - pattern: /**
+        access:
+          - isAuthenticated()
     oauth2:
       enabled: ${OIDC_ENABLED:false}
       pkce:
         enabled: true
         persistence: cookie
-      callback-uri: "${micronaut.server.context-path}/oauth/callback{/provider}"
-      login-uri: "${micronaut.server.context-path}/oauth/login{/provider}"
+      callback-uri: "/oauth/callback{/provider}"
+      login-uri: "/oauth/login{/provider}"
       default-provider: oidc
+      openid:
+        end-session:
+          redirect-uri: "${domain}/"
       clients:
         oidc:
-          client-id: ${OIDC_CLIENT_ID:example-client}
-          client-secret: ${OIDC_CLIENT_SECRET:example-secret}
+          client-id: ${OIDC_CLIENT_ID:micronaut-app}
+          client-secret: ${OIDC_CLIENT_SECRET:micronaut-secret}
           grant-type: authorization_code
           openid:
-            issuer: ${OIDC_ISSUER_URL:`https://login.example.ee`}
+            issuer: ${OIDC_ISSUER_URL:http://localhost:8081/realms/micronaut}
           scopes:
             - openid
             - profile
