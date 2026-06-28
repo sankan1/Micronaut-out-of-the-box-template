@@ -63,6 +63,36 @@ public class PersonRecord extends UpdatableRecordImpl<PersonRecord> {
         return (String) get(2);
     }
 
+    /**
+     * Setter for <code>person.person.identity_code</code>.
+     */
+    public PersonRecord setIdentityCode(String value) {
+        set(3, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>person.person.identity_code</code>.
+     */
+    public String getIdentityCode() {
+        return (String) get(3);
+    }
+
+    /**
+     * Setter for <code>person.person.age</code>.
+     */
+    public PersonRecord setAge(Integer value) {
+        set(4, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>person.person.age</code>.
+     */
+    public Integer getAge() {
+        return (Integer) get(4);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -86,12 +116,14 @@ public class PersonRecord extends UpdatableRecordImpl<PersonRecord> {
     /**
      * Create a detached, initialised PersonRecord
      */
-    public PersonRecord(Long id, String name, String nickname) {
+    public PersonRecord(Long id, String name, String nickname, String identityCode, Integer age) {
         super(Person.PERSON_);
 
         setId(id);
         setName(name);
         setNickname(nickname);
+        setIdentityCode(identityCode);
+        setAge(age);
         resetTouchedOnNotNull();
     }
 
@@ -105,6 +137,8 @@ public class PersonRecord extends UpdatableRecordImpl<PersonRecord> {
             setId(value.getId());
             setName(value.getName());
             setNickname(value.getNickname());
+            setIdentityCode(value.getIdentityCode());
+            setAge(value.getAge());
             resetTouchedOnNotNull();
         }
     }

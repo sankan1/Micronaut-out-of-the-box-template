@@ -30,6 +30,11 @@ import jakarta.annotation.Generated;
     PersonSearchRequest.JSON_PROPERTY_NAME,
     PersonSearchRequest.JSON_PROPERTY_NICKNAME,
     PersonSearchRequest.JSON_PROPERTY_HOBBY,
+    PersonSearchRequest.JSON_PROPERTY_IDENTITY_CODE,
+    PersonSearchRequest.JSON_PROPERTY_CAR_MARK,
+    PersonSearchRequest.JSON_PROPERTY_CAR_MODEL,
+    PersonSearchRequest.JSON_PROPERTY_ISSUER_FIRM_NAME,
+    PersonSearchRequest.JSON_PROPERTY_INSURANCE_PLAN,
     PersonSearchRequest.JSON_PROPERTY_TEXT_SEARCH,
 })
 @Serdeable
@@ -39,6 +44,11 @@ public class PersonSearchRequest {
     public static final String JSON_PROPERTY_NAME = "name";
     public static final String JSON_PROPERTY_NICKNAME = "nickname";
     public static final String JSON_PROPERTY_HOBBY = "hobby";
+    public static final String JSON_PROPERTY_IDENTITY_CODE = "identityCode";
+    public static final String JSON_PROPERTY_CAR_MARK = "carMark";
+    public static final String JSON_PROPERTY_CAR_MODEL = "carModel";
+    public static final String JSON_PROPERTY_ISSUER_FIRM_NAME = "issuerFirmName";
+    public static final String JSON_PROPERTY_INSURANCE_PLAN = "insurancePlan";
     public static final String JSON_PROPERTY_TEXT_SEARCH = "textSearch";
 
     @Nullable(inherited = true)
@@ -55,6 +65,31 @@ public class PersonSearchRequest {
     @JsonProperty(JSON_PROPERTY_HOBBY)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String hobby;
+
+    @Nullable(inherited = true)
+    @JsonProperty(JSON_PROPERTY_IDENTITY_CODE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String identityCode;
+
+    @Nullable(inherited = true)
+    @JsonProperty(JSON_PROPERTY_CAR_MARK)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String carMark;
+
+    @Nullable(inherited = true)
+    @JsonProperty(JSON_PROPERTY_CAR_MODEL)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String carModel;
+
+    @Nullable(inherited = true)
+    @JsonProperty(JSON_PROPERTY_ISSUER_FIRM_NAME)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String issuerFirmName;
+
+    @Nullable(inherited = true)
+    @JsonProperty(JSON_PROPERTY_INSURANCE_PLAN)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String insurancePlan;
 
     @Nullable(inherited = true)
     @JsonProperty(JSON_PROPERTY_TEXT_SEARCH)
@@ -140,6 +175,136 @@ public class PersonSearchRequest {
     }
 
     /**
+     * @return the identityCode property value
+     */
+    public String getIdentityCode() {
+        return identityCode;
+    }
+
+    /**
+     * Set the identityCode property value
+     *
+     * @param identityCode property value to set
+     */
+    public void setIdentityCode(String identityCode) {
+        this.identityCode = identityCode;
+    }
+
+    /**
+     * Set identityCode in a chainable fashion.
+     *
+     * @return The same instance of PersonSearchRequest for chaining.
+     */
+    public PersonSearchRequest identityCode(String identityCode) {
+        this.identityCode = identityCode;
+        return this;
+    }
+
+    /**
+     * @return the carMark property value
+     */
+    public String getCarMark() {
+        return carMark;
+    }
+
+    /**
+     * Set the carMark property value
+     *
+     * @param carMark property value to set
+     */
+    public void setCarMark(String carMark) {
+        this.carMark = carMark;
+    }
+
+    /**
+     * Set carMark in a chainable fashion.
+     *
+     * @return The same instance of PersonSearchRequest for chaining.
+     */
+    public PersonSearchRequest carMark(String carMark) {
+        this.carMark = carMark;
+        return this;
+    }
+
+    /**
+     * @return the carModel property value
+     */
+    public String getCarModel() {
+        return carModel;
+    }
+
+    /**
+     * Set the carModel property value
+     *
+     * @param carModel property value to set
+     */
+    public void setCarModel(String carModel) {
+        this.carModel = carModel;
+    }
+
+    /**
+     * Set carModel in a chainable fashion.
+     *
+     * @return The same instance of PersonSearchRequest for chaining.
+     */
+    public PersonSearchRequest carModel(String carModel) {
+        this.carModel = carModel;
+        return this;
+    }
+
+    /**
+     * @return the issuerFirmName property value
+     */
+    public String getIssuerFirmName() {
+        return issuerFirmName;
+    }
+
+    /**
+     * Set the issuerFirmName property value
+     *
+     * @param issuerFirmName property value to set
+     */
+    public void setIssuerFirmName(String issuerFirmName) {
+        this.issuerFirmName = issuerFirmName;
+    }
+
+    /**
+     * Set issuerFirmName in a chainable fashion.
+     *
+     * @return The same instance of PersonSearchRequest for chaining.
+     */
+    public PersonSearchRequest issuerFirmName(String issuerFirmName) {
+        this.issuerFirmName = issuerFirmName;
+        return this;
+    }
+
+    /**
+     * @return the insurancePlan property value
+     */
+    public String getInsurancePlan() {
+        return insurancePlan;
+    }
+
+    /**
+     * Set the insurancePlan property value
+     *
+     * @param insurancePlan property value to set
+     */
+    public void setInsurancePlan(String insurancePlan) {
+        this.insurancePlan = insurancePlan;
+    }
+
+    /**
+     * Set insurancePlan in a chainable fashion.
+     *
+     * @return The same instance of PersonSearchRequest for chaining.
+     */
+    public PersonSearchRequest insurancePlan(String insurancePlan) {
+        this.insurancePlan = insurancePlan;
+        return this;
+    }
+
+    /**
      * @return the textSearch property value
      */
     public String getTextSearch() {
@@ -177,12 +342,17 @@ public class PersonSearchRequest {
         return Objects.equals(this.name, personSearchRequest.name)
             && Objects.equals(this.nickname, personSearchRequest.nickname)
             && Objects.equals(this.hobby, personSearchRequest.hobby)
+            && Objects.equals(this.identityCode, personSearchRequest.identityCode)
+            && Objects.equals(this.carMark, personSearchRequest.carMark)
+            && Objects.equals(this.carModel, personSearchRequest.carModel)
+            && Objects.equals(this.issuerFirmName, personSearchRequest.issuerFirmName)
+            && Objects.equals(this.insurancePlan, personSearchRequest.insurancePlan)
             && Objects.equals(this.textSearch, personSearchRequest.textSearch);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, nickname, hobby, textSearch);
+        return Objects.hash(name, nickname, hobby, identityCode, carMark, carModel, issuerFirmName, insurancePlan, textSearch);
     }
 
     @Override
@@ -191,6 +361,11 @@ public class PersonSearchRequest {
             + "name: " + getName() + ", "
             + "nickname: " + getNickname() + ", "
             + "hobby: " + getHobby() + ", "
+            + "identityCode: " + getIdentityCode() + ", "
+            + "carMark: " + getCarMark() + ", "
+            + "carModel: " + getCarModel() + ", "
+            + "issuerFirmName: " + getIssuerFirmName() + ", "
+            + "insurancePlan: " + getInsurancePlan() + ", "
             + "textSearch: " + getTextSearch()
             + ")";
     }

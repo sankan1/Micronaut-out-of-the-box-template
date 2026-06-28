@@ -89,10 +89,7 @@ public class TokenRefreshService {
         userAuthenticationPort.updateTokens(
             auth.userAuthenticationId(), response.accessToken(), newRefreshToken, newExpiry);
 
-        if (response.scope() == null || response.scope().isBlank()) {
-            return userRoleService.getRoles(auth.userId());
-        }
-        return userRoleService.syncRoles(auth.userId(), response.scope());
+        return userRoleService.getRoles(auth.userId());
     }
 
     private void terminate(SessionTokens auth, String reason) {

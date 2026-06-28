@@ -16,6 +16,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.format.Format;
 import io.micronaut.http.HttpResponse;
 import com.example.openapi.model.Person;
+import com.example.openapi.model.PersonCreateRequest;
 import com.example.openapi.model.PersonSearchRequest;
 import com.example.openapi.model.PersonsResponse;
 import static io.micronaut.core.convert.converters.MultiValuesConverterFactory.*;
@@ -30,6 +31,18 @@ import jakarta.validation.constraints.*;
 @Generated("io.micronaut.openapi.generator.JavaMicronautServerCodegen")
 @Controller
 public interface PersonsApi {
+
+    /**
+     * createPerson
+     *
+     * @param personCreateRequest (optional)
+     *
+     * @return Created person (status code 200)
+     */
+    @Post("/persons")
+    HttpResponse<@Valid Person> createPerson(
+        @Body @Nullable(inherited = true) @Valid PersonCreateRequest personCreateRequest
+    );
 
     /**
      * getPerson

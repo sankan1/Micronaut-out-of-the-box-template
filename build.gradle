@@ -92,6 +92,9 @@ jooq {
                             schema { inputSchema = 'public' }
                             schema { inputSchema = 'person' }
                             schema { inputSchema = 'system' }
+                            schema { inputSchema = 'car' }
+                            schema { inputSchema = 'issuer_firm' }
+                            schema { inputSchema = 'insurance' }
                         }
                     }
                     generate {

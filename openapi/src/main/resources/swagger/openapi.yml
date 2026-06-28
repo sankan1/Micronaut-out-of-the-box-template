@@ -67,6 +67,19 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Persons' }
+    post:
+      tags: [persons]
+      operationId: createPerson
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PersonCreateRequest' }
+      responses:
+        '200':
+          description: Created person
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Person' }
   /persons/quick/search:
     get:
       tags: [quick-search]
@@ -82,6 +95,182 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/PersonsResponse' }
+  /cars/search:
+    post:
+      tags: [cars]
+      operationId: searchCars
+      parameters:
+        - { name: page, in: query, schema: { type: integer } }
+        - { name: size, in: query, schema: { type: integer } }
+        - { name: sort, in: query, schema: { type: array, items: { type: string } } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CarSearchRequest' }
+      responses:
+        '200':
+          description: Page of cars
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CarsResponse' }
+  /cars/{id}:
+    get:
+      tags: [cars]
+      operationId: getCar
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: A car
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Car' }
+    put:
+      tags: [cars]
+      operationId: updateCar
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CarUpdateRequest' }
+      responses:
+        '200':
+          description: Updated car
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Car' }
+    delete:
+      tags: [cars]
+      operationId: deleteCar
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '204': { description: Deleted }
+  /cars:
+    post:
+      tags: [cars]
+      operationId: createCar
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CarCreateRequest' }
+      responses:
+        '200':
+          description: Created car (with its issuer firm)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Car' }
+  /cars/{id}/owner:
+    put:
+      tags: [cars]
+      operationId: assignCarOwner
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CarOwnerAssignRequest' }
+      responses:
+        '200':
+          description: Car with owner assigned
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Car' }
+  /issuer-firms/search:
+    post:
+      tags: [issuer-firms]
+      operationId: searchIssuerFirms
+      parameters:
+        - { name: page, in: query, schema: { type: integer } }
+        - { name: size, in: query, schema: { type: integer } }
+        - { name: sort, in: query, schema: { type: array, items: { type: string } } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/IssuerFirmSearchRequest' }
+      responses:
+        '200':
+          description: Page of issuer firms
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/IssuerFirmsResponse' }
+  /insurances/search:
+    post:
+      tags: [insurances]
+      operationId: searchInsurances
+      parameters:
+        - { name: page, in: query, schema: { type: integer } }
+        - { name: size, in: query, schema: { type: integer } }
+        - { name: sort, in: query, schema: { type: array, items: { type: string } } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/InsuranceSearchRequest' }
+      responses:
+        '200':
+          description: Page of insurances
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/InsurancesResponse' }
+  /insurances/{id}:
+    get:
+      tags: [insurances]
+      operationId: getInsurance
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: An insurance
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Insurance' }
+    put:
+      tags: [insurances]
+      operationId: updateInsurance
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/InsuranceUpdateRequest' }
+      responses:
+        '200':
+          description: Updated insurance
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Insurance' }
+    delete:
+      tags: [insurances]
+      operationId: deleteInsurance
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '204': { description: Deleted }
+  /insurances:
+    post:
+      tags: [insurances]
+      operationId: createInsurance
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/InsuranceCreateRequest' }
+      responses:
+        '200':
+          description: Created insurance
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Insurance' }
+  /insurances/expiring-soon:
+    get:
+      tags: [insurances]
+      operationId: getExpiringSoonInsurances
+      responses:
+        '200':
+          description: Insurances with fewer than 30 days left
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Insurances' }
   /smart-id/init:
     post:
       tags: [auth]
@@ -133,21 +322,154 @@ components:
         name: { type: string }
         nickname: { type: string }
         hobby: { type: string }
+        identityCode: { type: string }
+        age: { type: integer }
     Persons:
       type: array
       items:
         $ref: '#/components/schemas/Person'
+    PersonCreateRequest:
+      type: object
+      required: [name, identityCode]
+      properties:
+        name: { type: string }
+        nickname: { type: string }
+        identityCode: { type: string }
+        age: { type: integer }
     PersonSearchRequest:
       type: object
       properties:
         name: { type: string }
         nickname: { type: string }
         hobby: { type: string }
+        identityCode: { type: string }
+        carMark: { type: string }
+        carModel: { type: string }
+        issuerFirmName: { type: string }
+        insurancePlan: { type: string }
         textSearch: { type: string }
     PersonsResponse:
       type: object
       properties:
         content: { type: array, items: { $ref: '#/components/schemas/Person' } }
+        totalSize: { type: integer }
+        totalPages: { type: integer }
+    Car:
+      type: object
+      required: [id, mark, model]
+      properties:
+        id: { type: integer }
+        ownerId: { type: integer }
+        ownerName: { type: string }
+        mark: { type: string }
+        model: { type: string }
+        issuerFirmName: { type: string }
+    CarCreateRequest:
+      type: object
+      required: [mark, model, issuerFirmName]
+      properties:
+        mark: { type: string }
+        model: { type: string }
+        issuerFirmName: { type: string }
+    CarUpdateRequest:
+      type: object
+      required: [mark, model]
+      properties:
+        mark: { type: string }
+        model: { type: string }
+    CarOwnerAssignRequest:
+      type: object
+      required: [personId]
+      properties:
+        personId: { type: integer }
+    CarSearchRequest:
+      type: object
+      properties:
+        mark: { type: string }
+        model: { type: string }
+        ownerId: { type: integer }
+        ownerName: { type: string }
+        issuerFirmName: { type: string }
+        unownedOnly: { type: boolean }
+        textSearch: { type: string }
+    CarsResponse:
+      type: object
+      properties:
+        content: { type: array, items: { $ref: '#/components/schemas/Car' } }
+        totalSize: { type: integer }
+        totalPages: { type: integer }
+    IssuerFirm:
+      type: object
+      required: [id, carId, firmName]
+      properties:
+        id: { type: integer }
+        carId: { type: integer }
+        firmName: { type: string }
+        carMark: { type: string }
+        carModel: { type: string }
+    IssuerFirmSearchRequest:
+      type: object
+      properties:
+        firmName: { type: string }
+        textSearch: { type: string }
+    IssuerFirmsResponse:
+      type: object
+      properties:
+        content: { type: array, items: { $ref: '#/components/schemas/IssuerFirm' } }
+        totalSize: { type: integer }
+        totalPages: { type: integer }
+    Insurance:
+      type: object
+      required: [id, personId, carId, insurerName, plan, amount, expiryDate]
+      properties:
+        id: { type: integer }
+        personId: { type: integer }
+        personName: { type: string }
+        carId: { type: integer }
+        carMark: { type: string }
+        carModel: { type: string }
+        insurerName: { type: string }
+        plan: { type: string }
+        amount: { type: number, format: double }
+        expiryDate: { type: string, format: date }
+        daysLeft: { type: integer }
+    Insurances:
+      type: array
+      items:
+        $ref: '#/components/schemas/Insurance'
+    InsuranceCreateRequest:
+      type: object
+      required: [personId, carId, insurerName, plan, amount, expiryDate]
+      properties:
+        personId: { type: integer }
+        carId: { type: integer }
+        insurerName: { type: string }
+        plan: { type: string }
+        amount: { type: number, format: double }
+        expiryDate: { type: string, format: date }
+    InsuranceUpdateRequest:
+      type: object
+      required: [insurerName, plan, amount, expiryDate]
+      properties:
+        insurerName: { type: string }
+        plan: { type: string }
+        amount: { type: number, format: double }
+        expiryDate: { type: string, format: date }
+    InsuranceSearchRequest:
+      type: object
+      properties:
+        insurerName: { type: string }
+        plan: { type: string }
+        personId: { type: integer }
+        personName: { type: string }
+        carId: { type: integer }
+        carMark: { type: string }
+        carModel: { type: string }
+        textSearch: { type: string }
+    InsurancesResponse:
+      type: object
+      properties:
+        content: { type: array, items: { $ref: '#/components/schemas/Insurance' } }
         totalSize: { type: integer }
         totalPages: { type: integer }
     SmartIdInitRequest:

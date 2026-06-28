@@ -2,6 +2,7 @@ package com.example.auth.oidc;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.reactivestreams.Publisher;
@@ -53,12 +54,12 @@ public class OidcAuthenticationMapper implements OpenIdAuthenticationMapper {
         String givenName = openIdClaims.getGivenName();
         String familyName = openIdClaims.getFamilyName();
         String email = openIdClaims.getEmail();
-        String scope = tokenResponse.getScope();
+        List<String> roles = extractRoles(openIdClaims);
         String ssn = generateEstonianSsn();
 
         return Mono.fromCallable(() -> {
                 AuthenticatedUser user = userService.loginWithOidc(
-                    ssn, givenName, familyName, email, scope, tokenResponse);
+                    ssn, givenName, familyName, email, roles, tokenResponse);
 
                 Map<String, Object> attributes = new HashMap<>();
                 attributes.put(SessionUtil.SESSION_ID_ATTRIBUTE, user.getSessionId().toString());
@@ -68,6 +69,14 @@ public class OidcAuthenticationMapper implements OpenIdAuthenticationMapper {
                     user.getUuid().toString(), user.getRoles(), attributes);
             })
             .subscribeOn(Schedulers.boundedElastic());
+    }
+
+    private static List<String> extractRoles(OpenIdClaims claims) {
+        Object rolesClaim = claims.getClaims().get("roles");
+        if (rolesClaim instanceof List<?> list) {
+            return list.stream().map(String::valueOf).toList();
+        }
+        return List.of();
     }
 
     // checksum-valid Estonian personal code, starts with 5

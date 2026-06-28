@@ -3,6 +3,7 @@ package com.example.business.useCase;
 import com.example.business.adapter.PersonAdapter;
 import com.example.jooq.person.tables.pojos.Person;
 import io.getunleash.Unleash;
+import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ public class GetPersons {
         this.unleash = unleash;
     }
 
+    @Transactional(readOnly = true)
     public List<Person> execute() {
         if (!unleash.isEnabled("get-persons")) {
             LOG.error("Fetch all persons is disabled!");

@@ -25,7 +25,8 @@
             ],
             "clientRoles": {
                 "micronaut-app": [
-                    "user"
+                    "user",
+                    "example.end-user"
                 ]
             }
         },
@@ -50,7 +51,32 @@
             "clientRoles": {
                 "micronaut-app": [
                     "user",
-                    "admin"
+                    "admin",
+                    "example.admin"
+                ]
+            }
+        },
+        {
+            "username": "headuser",
+            "email": "headuser@example.com",
+            "firstName": "Head",
+            "lastName": "User",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password123",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "user"
+            ],
+            "clientRoles": {
+                "micronaut-app": [
+                    "user",
+                    "example.head-user"
                 ]
             }
         }
@@ -65,7 +91,23 @@
                 "name": "admin",
                 "description": "Admin role"
             }
-        ]
+        ],
+        "client": {
+            "micronaut-app": [
+                {
+                    "name": "example.admin",
+                    "description": "App role group: ADMIN - full access"
+                },
+                {
+                    "name": "example.head-user",
+                    "description": "App role group: HEAD_USER - ties cars to owners, creates insurance"
+                },
+                {
+                    "name": "example.end-user",
+                    "description": "App role group: END_USER - creates persons and cars+issuer firms"
+                }
+            ]
+        }
     },
     "clients": [
         {
@@ -139,7 +181,7 @@
                     "config": {
                         "userinfo.token.claim": "true",
                         "multivalued": "true",
-                        "user.attribute": "foo",
+                        "usermodel.clientId": "micronaut-app",
                         "id.token.claim": "true",
                         "access.token.claim": "true",
                         "claim.name": "roles"

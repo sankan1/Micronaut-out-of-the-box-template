@@ -8,6 +8,7 @@ import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Singleton
@@ -30,11 +31,11 @@ public class UserService {
 
     @Transactional(timeout = 60)
     public AuthenticatedUser loginWithOidc(String ssn, String givenName, String familyName,
-                                           String email, String scope, OpenIdTokenResponse tokenResponse) {
+                                           String email, List<String> roles, OpenIdTokenResponse tokenResponse) {
         AuthenticatedUser user = userAdapter.findUserBySsn(ssn)
             .orElseGet(() -> userAdapter.createUser(ssn, givenName, familyName, email));
 
-        user.setRoles(userRoleService.syncRoles(user.getUserId(), scope));
+        user.setRoles(userRoleService.syncRoles(user.getUserId(), roles));
 
         UUID sessionId = UUID.randomUUID();
         OffsetDateTime tokenExpiration = OffsetDateTime.now().plusSeconds(tokenResponse.getExpiresIn());

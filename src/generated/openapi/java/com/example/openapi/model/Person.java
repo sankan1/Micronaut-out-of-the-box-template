@@ -31,6 +31,8 @@ import jakarta.annotation.Generated;
     Person.JSON_PROPERTY_NAME,
     Person.JSON_PROPERTY_NICKNAME,
     Person.JSON_PROPERTY_HOBBY,
+    Person.JSON_PROPERTY_IDENTITY_CODE,
+    Person.JSON_PROPERTY_AGE,
 })
 @Serdeable
 @Generated("io.micronaut.openapi.generator.JavaMicronautServerCodegen")
@@ -40,6 +42,8 @@ public class Person {
     public static final String JSON_PROPERTY_NAME = "name";
     public static final String JSON_PROPERTY_NICKNAME = "nickname";
     public static final String JSON_PROPERTY_HOBBY = "hobby";
+    public static final String JSON_PROPERTY_IDENTITY_CODE = "identityCode";
+    public static final String JSON_PROPERTY_AGE = "age";
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_ID)
@@ -58,6 +62,16 @@ public class Person {
     @JsonProperty(JSON_PROPERTY_HOBBY)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String hobby;
+
+    @Nullable(inherited = true)
+    @JsonProperty(JSON_PROPERTY_IDENTITY_CODE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String identityCode;
+
+    @Nullable(inherited = true)
+    @JsonProperty(JSON_PROPERTY_AGE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Integer age;
 
     public Person(Integer id, String name) {
         this.id = id;
@@ -168,6 +182,58 @@ public class Person {
         return this;
     }
 
+    /**
+     * @return the identityCode property value
+     */
+    public String getIdentityCode() {
+        return identityCode;
+    }
+
+    /**
+     * Set the identityCode property value
+     *
+     * @param identityCode property value to set
+     */
+    public void setIdentityCode(String identityCode) {
+        this.identityCode = identityCode;
+    }
+
+    /**
+     * Set identityCode in a chainable fashion.
+     *
+     * @return The same instance of Person for chaining.
+     */
+    public Person identityCode(String identityCode) {
+        this.identityCode = identityCode;
+        return this;
+    }
+
+    /**
+     * @return the age property value
+     */
+    public Integer getAge() {
+        return age;
+    }
+
+    /**
+     * Set the age property value
+     *
+     * @param age property value to set
+     */
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    /**
+     * Set age in a chainable fashion.
+     *
+     * @return The same instance of Person for chaining.
+     */
+    public Person age(Integer age) {
+        this.age = age;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -180,12 +246,14 @@ public class Person {
         return Objects.equals(this.id, person.id)
             && Objects.equals(this.name, person.name)
             && Objects.equals(this.nickname, person.nickname)
-            && Objects.equals(this.hobby, person.hobby);
+            && Objects.equals(this.hobby, person.hobby)
+            && Objects.equals(this.identityCode, person.identityCode)
+            && Objects.equals(this.age, person.age);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, nickname, hobby);
+        return Objects.hash(id, name, nickname, hobby, identityCode, age);
     }
 
     @Override
@@ -194,7 +262,9 @@ public class Person {
             + "id: " + getId() + ", "
             + "name: " + getName() + ", "
             + "nickname: " + getNickname() + ", "
-            + "hobby: " + getHobby()
+            + "hobby: " + getHobby() + ", "
+            + "identityCode: " + getIdentityCode() + ", "
+            + "age: " + getAge()
             + ")";
     }
 

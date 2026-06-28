@@ -18,6 +18,8 @@ public class Person implements Serializable {
     private Long id;
     private String name;
     private String nickname;
+    private String identityCode;
+    private Integer age;
 
     public Person() {}
 
@@ -25,16 +27,22 @@ public class Person implements Serializable {
         this.id = value.id;
         this.name = value.name;
         this.nickname = value.nickname;
+        this.identityCode = value.identityCode;
+        this.age = value.age;
     }
 
     public Person(
         Long id,
         String name,
-        String nickname
+        String nickname,
+        String identityCode,
+        Integer age
     ) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
+        this.identityCode = identityCode;
+        this.age = age;
     }
 
     /**
@@ -82,6 +90,36 @@ public class Person implements Serializable {
         return this;
     }
 
+    /**
+     * Getter for <code>person.person.identity_code</code>.
+     */
+    public String getIdentityCode() {
+        return this.identityCode;
+    }
+
+    /**
+     * Setter for <code>person.person.identity_code</code>.
+     */
+    public Person setIdentityCode(String identityCode) {
+        this.identityCode = identityCode;
+        return this;
+    }
+
+    /**
+     * Getter for <code>person.person.age</code>.
+     */
+    public Integer getAge() {
+        return this.age;
+    }
+
+    /**
+     * Setter for <code>person.person.age</code>.
+     */
+    public Person setAge(Integer age) {
+        this.age = age;
+        return this;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -109,6 +147,18 @@ public class Person implements Serializable {
         }
         else if (!this.nickname.equals(other.nickname))
             return false;
+        if (this.identityCode == null) {
+            if (other.identityCode != null)
+                return false;
+        }
+        else if (!this.identityCode.equals(other.identityCode))
+            return false;
+        if (this.age == null) {
+            if (other.age != null)
+                return false;
+        }
+        else if (!this.age.equals(other.age))
+            return false;
         return true;
     }
 
@@ -119,6 +169,8 @@ public class Person implements Serializable {
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
         result = prime * result + ((this.nickname == null) ? 0 : this.nickname.hashCode());
+        result = prime * result + ((this.identityCode == null) ? 0 : this.identityCode.hashCode());
+        result = prime * result + ((this.age == null) ? 0 : this.age.hashCode());
         return result;
     }
 
@@ -129,6 +181,8 @@ public class Person implements Serializable {
         sb.append(id);
         sb.append(", ").append(name);
         sb.append(", ").append(nickname);
+        sb.append(", ").append(identityCode);
+        sb.append(", ").append(age);
 
         sb.append(")");
         return sb.toString();

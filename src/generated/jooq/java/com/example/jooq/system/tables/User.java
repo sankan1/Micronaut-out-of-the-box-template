@@ -73,7 +73,7 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>system.user.ssn</code>.
      */
-    public final TableField<UserRecord, String> SSN = createField(DSL.name("ssn"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<UserRecord, String> SSN = createField(DSL.name("ssn"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>system.user.email</code>.

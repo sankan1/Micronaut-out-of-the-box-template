@@ -25,4 +25,5 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<PersonRecord> PERSON__ID__PKEY = Internal.createUniqueKey(Person.PERSON_, DSL.name("person__id__pkey"), new TableField[] { Person.PERSON_.ID }, true);
+    public static final UniqueKey<PersonRecord> PERSON__IDENTITY_CODE__UNIQUE = Internal.createUniqueKey(Person.PERSON_, DSL.name("person__identity_code__unique"), new TableField[] { Person.PERSON_.IDENTITY_CODE }, true);
 }

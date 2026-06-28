@@ -97,4 +97,48 @@ public class PersonDao extends DAOImpl<PersonRecord, com.example.jooq.person.tab
     public List<com.example.jooq.person.tables.pojos.Person> fetchByNickname(String... values) {
         return fetch(Person.PERSON_.NICKNAME, values);
     }
+
+    /**
+     * Fetch records that have <code>identity_code BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<com.example.jooq.person.tables.pojos.Person> fetchRangeOfIdentityCode(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Person.PERSON_.IDENTITY_CODE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>identity_code IN (values)</code>
+     */
+    public List<com.example.jooq.person.tables.pojos.Person> fetchByIdentityCode(String... values) {
+        return fetch(Person.PERSON_.IDENTITY_CODE, values);
+    }
+
+    /**
+     * Fetch a unique record that has <code>identity_code = value</code>
+     */
+    public com.example.jooq.person.tables.pojos.Person fetchOneByIdentityCode(String value) {
+        return fetchOne(Person.PERSON_.IDENTITY_CODE, value);
+    }
+
+    /**
+     * Fetch a unique record that has <code>identity_code = value</code>
+     */
+    public Optional<com.example.jooq.person.tables.pojos.Person> fetchOptionalByIdentityCode(String value) {
+        return fetchOptional(Person.PERSON_.IDENTITY_CODE, value);
+    }
+
+    /**
+     * Fetch records that have <code>age BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<com.example.jooq.person.tables.pojos.Person> fetchRangeOfAge(Integer lowerInclusive, Integer upperInclusive) {
+        return fetchRange(Person.PERSON_.AGE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>age IN (values)</code>
+     */
+    public List<com.example.jooq.person.tables.pojos.Person> fetchByAge(Integer... values) {
+        return fetch(Person.PERSON_.AGE, values);
+    }
 }

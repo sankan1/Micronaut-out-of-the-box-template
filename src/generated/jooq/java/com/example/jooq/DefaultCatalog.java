@@ -4,6 +4,9 @@
 package com.example.jooq;
 
 
+import com.example.jooq.car.Car;
+import com.example.jooq.insurance.Insurance;
+import com.example.jooq.issuer_firm.IssuerFirm;
 import com.example.jooq.person.Person;
 import com.example.jooq.system.System;
 
@@ -29,6 +32,21 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
+     * The schema <code>car</code>.
+     */
+    public final Car CAR = Car.CAR;
+
+    /**
+     * The schema <code>insurance</code>.
+     */
+    public final Insurance INSURANCE = Insurance.INSURANCE;
+
+    /**
+     * The schema <code>issuer_firm</code>.
+     */
+    public final IssuerFirm ISSUER_FIRM = IssuerFirm.ISSUER_FIRM;
+
+    /**
      * The schema <code>person</code>.
      */
     public final Person PERSON = Person.PERSON;
@@ -48,6 +66,9 @@ public class DefaultCatalog extends CatalogImpl {
     @Override
     public final List<Schema> getSchemas() {
         return Arrays.asList(
+            Car.CAR,
+            Insurance.INSURANCE,
+            IssuerFirm.ISSUER_FIRM,
             Person.PERSON,
             System.SYSTEM
         );

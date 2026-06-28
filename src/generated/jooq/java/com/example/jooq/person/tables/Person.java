@@ -4,17 +4,25 @@
 package com.example.jooq.person.tables;
 
 
+import com.example.jooq.car.tables.Car.CarPath;
+import com.example.jooq.insurance.tables.Insurance.InsurancePath;
 import com.example.jooq.person.Keys;
 import com.example.jooq.person.tables.records.PersonRecord;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Stringly;
@@ -65,6 +73,16 @@ public class Person extends TableImpl<PersonRecord> {
      */
     public final TableField<PersonRecord, String> NICKNAME = createField(DSL.name("nickname"), SQLDataType.VARCHAR(255), this, "");
 
+    /**
+     * The column <code>person.person.identity_code</code>.
+     */
+    public final TableField<PersonRecord, String> IDENTITY_CODE = createField(DSL.name("identity_code"), SQLDataType.VARCHAR(20), this, "");
+
+    /**
+     * The column <code>person.person.age</code>.
+     */
+    public final TableField<PersonRecord, Integer> AGE = createField(DSL.name("age"), SQLDataType.INTEGER, this, "");
+
     private Person(Name alias, Table<PersonRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }
@@ -94,6 +112,39 @@ public class Person extends TableImpl<PersonRecord> {
         this(DSL.name("person"), null);
     }
 
+    public <O extends Record> Person(Table<O> path, ForeignKey<O, PersonRecord> childPath, InverseForeignKey<O, PersonRecord> parentPath) {
+        super(path, childPath, parentPath, PERSON_);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class PersonPath extends Person implements Path<PersonRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> PersonPath(Table<O> path, ForeignKey<O, PersonRecord> childPath, InverseForeignKey<O, PersonRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private PersonPath(Name alias, Table<PersonRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public PersonPath as(String alias) {
+            return new PersonPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public PersonPath as(Name alias) {
+            return new PersonPath(alias, this);
+        }
+
+        @Override
+        public PersonPath as(Table<?> alias) {
+            return new PersonPath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : com.example.jooq.person.Person.PERSON;
@@ -107,6 +158,36 @@ public class Person extends TableImpl<PersonRecord> {
     @Override
     public UniqueKey<PersonRecord> getPrimaryKey() {
         return Keys.PERSON__ID__PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<PersonRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.PERSON__IDENTITY_CODE__UNIQUE);
+    }
+
+    private transient CarPath _car;
+
+    /**
+     * Get the implicit to-many join path to the <code>car.car</code> table
+     */
+    public CarPath car() {
+        if (_car == null)
+            _car = new CarPath(this, null, com.example.jooq.car.Keys.CAR__CAR__OWNER_ID__FKEY.getInverseKey());
+
+        return _car;
+    }
+
+    private transient InsurancePath _insurance;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>insurance.insurance</code> table
+     */
+    public InsurancePath insurance() {
+        if (_insurance == null)
+            _insurance = new InsurancePath(this, null, com.example.jooq.insurance.Keys.INSURANCE__INSURANCE__PERSON_ID__FKEY.getInverseKey());
+
+        return _insurance;
     }
 
     @Override
