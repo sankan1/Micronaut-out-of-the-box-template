@@ -26,6 +26,10 @@ micronaut:
       oidc:
         url: ${OIDC_ISSUER_URL:`https://login.example.ee`}
         read-timeout: 5s
+      embedding:
+        url: "${EMBEDDING_URL:`http://localhost:11434`}"
+        # generous: Ollama cold-loads the model into memory on the first embed after idle
+        read-timeout: 60s
   security:
     authentication: cookie
     intercept-url-map:
@@ -94,6 +98,9 @@ unleash:
   api-url: "${UNLEASH_API_URL:`http://localhost:4242/api/`}"
   api-token: "${UNLEASH_API_TOKEN:`*:development.client-token-123`}"
   app-name: "${UNLEASH_APP_NAME:micronaut-out-of-the-box-template}"
+
+embedding:
+  model: ${EMBEDDING_MODEL:bge-m3}
 
 app:
   session:

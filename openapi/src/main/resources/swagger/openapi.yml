@@ -271,6 +271,63 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Insurances' }
+  /documents:
+    post:
+      tags: [documents]
+      operationId: createDocument
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DocumentCreateRequest' }
+      responses:
+        '200':
+          description: Created document
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Document' }
+  /documents/{id}:
+    get:
+      tags: [documents]
+      operationId: getDocument
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: A document with its full text
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Document' }
+  /documents/search:
+    get:
+      tags: [documents]
+      operationId: searchDocuments
+      description: Keyword (full-text GIN index) search over title and content
+      parameters:
+        - { name: keyword, in: query, required: true, schema: { type: string, minLength: 2 } }
+        - { name: page, in: query, schema: { type: integer } }
+        - { name: size, in: query, schema: { type: integer } }
+      responses:
+        '200':
+          description: Page of documents
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DocumentsResponse' }
+  /documents/context-search:
+    get:
+      tags: [documents]
+      operationId: contextSearchDocuments
+      description: Semantic (vector similarity) search over document embeddings
+      parameters:
+        - { name: query, in: query, required: true, schema: { type: string, minLength: 2 } }
+        - { name: limit, in: query, schema: { type: integer, default: 10 } }
+      responses:
+        '200':
+          description: Documents ranked by semantic similarity to the query
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Document' }
   /smart-id/init:
     post:
       tags: [auth]
@@ -470,6 +527,28 @@ components:
       type: object
       properties:
         content: { type: array, items: { $ref: '#/components/schemas/Insurance' } }
+        totalSize: { type: integer }
+        totalPages: { type: integer }
+    Document:
+      type: object
+      required: [id, title, text]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        text: { type: string, description: "Full document text, paragraphs separated by blank lines" }
+        createdAt: { type: string, format: date-time }
+        similarity: { type: number, format: double, description: "Only set on context-search results: cosine similarity to the query, 0..1" }
+        embedded: { type: boolean, description: "False when the embedding service was unavailable at upload time; the document is keyword-searchable but invisible to context search" }
+    DocumentCreateRequest:
+      type: object
+      required: [title, text]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 255 }
+        text: { type: string, minLength: 1 }
+    DocumentsResponse:
+      type: object
+      properties:
+        content: { type: array, items: { $ref: '#/components/schemas/Document' } }
         totalSize: { type: integer }
         totalPages: { type: integer }
     SmartIdInitRequest:

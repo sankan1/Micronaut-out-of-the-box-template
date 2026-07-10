@@ -95,6 +95,7 @@ jooq {
                             schema { inputSchema = 'car' }
                             schema { inputSchema = 'issuer_firm' }
                             schema { inputSchema = 'insurance' }
+                            schema { inputSchema = 'document' }
                         }
                     }
                     generate {

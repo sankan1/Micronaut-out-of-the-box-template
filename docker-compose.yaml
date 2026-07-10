@@ -1,6 +1,7 @@
 services:
   local-db:
-    image: postgres:${PG_VERSION}
+    # required by changelog/structure/18-document-vector.sql
+    image: ${PG_IMAGE}
     environment:
       POSTGRES_DB: ${PG_DATABASE}
       POSTGRES_USER: ${PG_USERNAME}
@@ -53,6 +54,14 @@ services:
       timeout: 5s
       retries: 5
 
+  # download after first start: docker exec -it <project>-ollama-1 ollama pull bge-m3
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+
   keycloak:
     image: quay.io/keycloak/keycloak:${KC_VERSION}
     environment:
@@ -82,3 +91,4 @@ volumes:
   local-db-data:
   unleash-db-data:
   keycloak-db-data:
+  ollama-models:

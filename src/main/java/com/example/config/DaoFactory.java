@@ -1,6 +1,7 @@
 package com.example.config;
 
 import com.example.jooq.car.tables.daos.CarDao;
+import com.example.jooq.document.tables.daos.DocumentDao;
 import com.example.jooq.insurance.tables.daos.InsuranceDao;
 import com.example.jooq.issuer_firm.tables.daos.IssuerFirmDao;
 import com.example.jooq.person.tables.daos.PersonDao;
@@ -29,5 +30,10 @@ public class DaoFactory {
     @Singleton
     public InsuranceDao insuranceDao(DSLContext dslContext) {
         return new InsuranceDao(dslContext.configuration());
+    }
+
+    @Singleton
+    public DocumentDao documentDao(DSLContext dslContext) {
+        return new DocumentDao(dslContext.configuration());
     }
 }
