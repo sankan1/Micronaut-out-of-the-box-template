@@ -351,8 +351,27 @@ paths:
       responses:
         '200':
           description: Smart id complete response
+  /math/sum:
+    get:
+      tags: [math]
+      operationId: sum
+      summary: Returns the sum of two numbers
+      parameters:
+        - { name: a, in: query, required: true, schema: { type: integer, format: int64 } }
+        - { name: b, in: query, required: true, schema: { type: integer, format: int64 } }
+      responses:
+        '200':
+          description: Sum of a and b
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SumResponse' }
 components:
   schemas:
+    SumResponse:
+      type: object
+      required: [sum]
+      properties:
+        sum: { type: integer, format: int64 }
     DefaultErrorResponse:
       description: Default error
       properties:
